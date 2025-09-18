@@ -1,0 +1,105 @@
+---
+title: "Realtime Multicam Studio"
+slug: "realtime-multicam-studio"
+description: "Desktop multicam recorder with smart switching and real-time effects."
+status: "shipped"
+tech: ["SwiftUI", "Metal", "CoreAudio", "AVFoundation"]
+tags: ["video", "macOS", "performance", "real-time"]
+featured: true
+links:
+  demo: "https://example.com/demo"
+  repo: "https://github.com/davidgibbon1/realtime-multicam"
+cover:
+  src: "/images/projects/realtime/cover.jpg"
+  alt: "Realtime Multicam Studio interface showing multiple camera feeds"
+date: "2025-09-10"
+---
+
+# Realtime Multicam Studio
+
+A powerful desktop application for recording and streaming multiple camera feeds simultaneously with intelligent auto-switching and real-time effects processing.
+
+## Overview
+
+This project started when I needed a solution for creating professional-looking video content without expensive hardware switchers. The app can handle up to 8 camera inputs, apply real-time effects, and intelligently switch between cameras based on audio levels, motion detection, or manual triggers.
+
+<Callout type="default">
+**Key Achievement**: Maintained 60fps performance with 4K input streams while applying real-time effects using Metal shaders.
+</Callout>
+
+## Technical Challenges
+
+### Performance Optimization
+
+The biggest challenge was maintaining smooth performance while processing multiple high-resolution video streams. Here's how I solved it:
+
+- **Metal Shaders**: Leveraged GPU acceleration for all video processing
+- **Memory Management**: Implemented efficient buffer pooling to minimize allocations
+- **Threading**: Used dedicated queues for video capture, processing, and output
+
+### Smart Switching Algorithm
+
+The auto-switching feature uses a combination of:
+
+1. **Audio Level Detection**: Switches to the camera with the highest audio input
+2. **Motion Analysis**: Detects significant movement in frame
+3. **Face Detection**: Prioritizes cameras with detected faces
+4. **Manual Overrides**: Allows user control when needed
+
+```swift
+func determineOptimalCamera() -> CameraInput? {
+    let audioWeights = calculateAudioWeights()
+    let motionWeights = calculateMotionWeights()
+    let faceWeights = calculateFaceDetectionWeights()
+    
+    return cameras.max { camera1, camera2 in
+        let score1 = calculateCompositeScore(camera1, audioWeights, motionWeights, faceWeights)
+        let score2 = calculateCompositeScore(camera2, audioWeights, motionWeights, faceWeights)
+        return score1 < score2
+    }
+}
+```
+
+## Features
+
+### Core Functionality
+- **Multi-Camera Support**: Up to 8 simultaneous camera inputs
+- **Real-time Switching**: Intelligent auto-switching with manual override
+- **Live Effects**: Color correction, filters, and transitions
+- **Recording**: High-quality output in multiple formats
+
+### Advanced Features
+- **Custom Transitions**: Smooth crossfades and wipe effects
+- **Audio Mixing**: Multi-channel audio with real-time mixing
+- **Streaming Integration**: Direct streaming to popular platforms
+- **Preset Management**: Save and recall camera configurations
+
+## Results
+
+The application has been used in production for:
+- **Live Streaming**: Over 100 hours of live content
+- **Video Production**: 50+ recorded sessions
+- **Performance**: Consistent 60fps with 4K inputs
+- **Stability**: Zero crashes in production use
+
+<TechStack items={["SwiftUI", "Metal", "CoreAudio", "AVFoundation", "Core ML"]} />
+
+## Lessons Learned
+
+Building this project taught me valuable lessons about:
+
+1. **Real-time Systems**: The importance of predictable performance
+2. **GPU Programming**: Efficient use of Metal for video processing
+3. **User Experience**: Balancing automation with user control
+4. **Performance Profiling**: Using Instruments to identify bottlenecks
+
+## Future Improvements
+
+- **AI-Powered Switching**: Use machine learning for smarter camera selection
+- **Remote Control**: Web interface for remote operation
+- **Cloud Integration**: Automatic backup and sharing features
+- **Plugin System**: Allow third-party effects and integrations
+
+---
+
+This project represents one of my most technically challenging builds, combining real-time video processing, intelligent algorithms, and a polished user interface. It's currently being used by several content creators and has received positive feedback for its reliability and ease of use.

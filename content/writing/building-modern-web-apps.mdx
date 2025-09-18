@@ -1,0 +1,237 @@
+---
+title: "Building Modern Web Apps with Next.js and TypeScript"
+slug: "building-modern-web-apps"
+description: "A comprehensive guide to building scalable, type-safe web applications using Next.js 15 and TypeScript."
+tags: ["Next.js", "TypeScript", "React", "Web Development"]
+date: "2025-09-15"
+published: true
+---
+
+# Building Modern Web Apps with Next.js and TypeScript
+
+Modern web development has evolved significantly over the past few years. With the introduction of Next.js 15 and improved TypeScript support, building scalable, performant web applications has become more accessible than ever.
+
+## Why Next.js and TypeScript?
+
+The combination of Next.js and TypeScript provides several key advantages:
+
+- **Type Safety**: Catch errors at compile time rather than runtime
+- **Developer Experience**: Excellent tooling and IDE support
+- **Performance**: Built-in optimizations for production
+- **Scalability**: Architecture that grows with your application
+
+## Setting Up Your Project
+
+Let's start by creating a new Next.js project with TypeScript:
+
+```bash
+npx create-next-app@latest my-app --typescript --tailwind --app
+cd my-app
+npm run dev
+```
+
+This command creates a new project with:
+- TypeScript configuration
+- Tailwind CSS for styling
+- App Router (the new routing system)
+- Development server ready to go
+
+## Key Features of Next.js 15
+
+### Server Components by Default
+
+One of the biggest changes in Next.js 13+ is the introduction of React Server Components. By default, components are now server-rendered, which means:
+
+- **Better Performance**: Less JavaScript sent to the client
+- **Improved SEO**: Content is rendered on the server
+- **Enhanced Security**: Sensitive logic stays on the server
+
+```tsx
+// This is a Server Component by default
+export default async function HomePage() {
+  const data = await fetch('https://api.example.com/data')
+  const posts = await data.json()
+  
+  return (
+    <div>
+      <h1>Latest Posts</h1>
+      {posts.map(post => (
+        <article key={post.id}>
+          <h2>{post.title}</h2>
+          <p>{post.excerpt}</p>
+        </article>
+      ))}
+    </div>
+  )
+}
+```
+
+### Improved Data Fetching
+
+Data fetching is now more intuitive with async/await support in Server Components:
+
+```tsx
+async function getUser(id: string) {
+  const res = await fetch(`https://api.example.com/users/${id}`)
+  if (!res.ok) throw new Error('Failed to fetch user')
+  return res.json()
+}
+
+export default async function UserProfile({ params }: { params: { id: string } }) {
+  const user = await getUser(params.id)
+  
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
+    </div>
+  )
+}
+```
+
+## TypeScript Best Practices
+
+### Define Clear Interfaces
+
+Always define interfaces for your data structures:
+
+```tsx
+interface User {
+  id: string
+  name: string
+  email: string
+  avatar?: string
+  createdAt: Date
+}
+
+interface ApiResponse<T> {
+  data: T
+  message: string
+  success: boolean
+}
+```
+
+### Use Strict Mode
+
+Enable strict mode in your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true
+  }
+}
+```
+
+### Leverage Type Inference
+
+Let TypeScript infer types when possible:
+
+```tsx
+// Good - TypeScript infers the return type
+const getUserName = (user: User) => user.name
+
+// Unnecessary - explicit return type
+const getUserName = (user: User): string => user.name
+```
+
+## Performance Optimization
+
+### Image Optimization
+
+Use Next.js Image component for automatic optimization:
+
+```tsx
+import Image from 'next/image'
+
+export default function ProfilePicture({ user }: { user: User }) {
+  return (
+    <Image
+      src={user.avatar}
+      alt={`${user.name}'s avatar`}
+      width={100}
+      height={100}
+      className="rounded-full"
+    />
+  )
+}
+```
+
+### Dynamic Imports
+
+Use dynamic imports for code splitting:
+
+```tsx
+import dynamic from 'next/dynamic'
+
+const DynamicChart = dynamic(() => import('../components/Chart'), {
+  loading: () => <p>Loading chart...</p>,
+  ssr: false
+})
+
+export default function Dashboard() {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <DynamicChart data={chartData} />
+    </div>
+  )
+}
+```
+
+## Testing Your Application
+
+Set up testing with Jest and React Testing Library:
+
+```bash
+npm install --save-dev jest @testing-library/react @testing-library/jest-dom
+```
+
+Create a simple test:
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import HomePage from '../app/page'
+
+describe('HomePage', () => {
+  it('renders the heading', () => {
+    render(<HomePage />)
+    const heading = screen.getByRole('heading', { level: 1 })
+    expect(heading).toBeInTheDocument()
+  })
+})
+```
+
+## Deployment
+
+Deploy your application to Vercel with zero configuration:
+
+```bash
+npm install -g vercel
+vercel
+```
+
+Vercel automatically:
+- Builds your application
+- Optimizes for production
+- Provides a global CDN
+- Handles SSL certificates
+
+## Conclusion
+
+Next.js 15 and TypeScript provide a powerful foundation for building modern web applications. The combination offers excellent developer experience, built-in performance optimizations, and type safety that scales with your project.
+
+Key takeaways:
+- Start with Server Components for better performance
+- Use TypeScript interfaces to define your data structures
+- Leverage Next.js built-in optimizations
+- Test your components thoroughly
+- Deploy with confidence using Vercel
+
+The web development landscape continues to evolve, but with these tools and practices, you'll be well-equipped to build applications that are both maintainable and performant.
+
+---
+
+*Want to learn more? Check out the [official Next.js documentation](https://nextjs.org/docs) and [TypeScript handbook](https://www.typescriptlang.org/docs/) for deeper insights.*
